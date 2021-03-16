@@ -52,11 +52,27 @@ namespace SignupWithMailConfirmation.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("ConfirmMail")]
-        public async Task<IActionResult> ConfirmMail (string username) 
+        [HttpGet("ConfirmMail/{userid}")]
+        public async Task<IActionResult> ConfirmMail (string userid) 
         {
-            string sMessage = await _loginInfoService.ConfirmMail(username);
+            string sMessage = await _loginInfoService.ConfirmMail(userid);
             return Ok(new {message = sMessage});
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetLoginInfo/{username}")]
+        public async Task<IActionResult> GetLoginInfo(string username) 
+        {
+            var loginInfo = await _loginInfoService.GetLoginUser(username);
+            return Ok(loginInfo);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetLoginInfoById/{guid}")]
+        public async Task<IActionResult> GetLoginInfoById(string guid) 
+        {
+            var loginInfo = await _loginInfoService.GetLoginUserByID(guid);
+            return Ok(loginInfo);
         }
 
         public MailClass GetMailObject(LoginInfo user) 
