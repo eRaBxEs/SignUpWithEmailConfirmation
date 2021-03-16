@@ -1,0 +1,17 @@
+###
+
+POST https://localhost:5001/api/LoginInfos/SignUp HTTP/1.1
+content-type: application/json
+
+ {
+     "emailId": "erabxes@gmail.com",
+     "username": "erabxes",
+     "password": "12345",
+     "confirmPassword": "12345"
+ }
+
+###
+GET https://localhost:5001/api/LoginInfos/GetLoginInfo/erabxes HTTP/1.1
+###
+GET https://localhost:5001/api/LoginInfos/GetLoginInfoById/Kr8hHoKNWUOAAVWxEVXw+g== HTTP/1.1
+###

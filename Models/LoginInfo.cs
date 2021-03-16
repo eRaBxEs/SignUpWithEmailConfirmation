@@ -27,6 +27,7 @@ namespace SignupWithMailConfirmation.Models
         [NotMapped]
         public string ConfirmPassword { get; set; }
         public bool IsmailConfirmed { get; set; }
+        public string GUID { get; set; }
         
     }
 }
