@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using SignUpWithEmailConfirmation.Common;
 using SignupWithMailConfirmation.Common;
 using SignupWithMailConfirmation.Data;
 using SignupWithMailConfirmation.IServices;
@@ -23,17 +24,17 @@ namespace SignupWithMailConfirmation.Services
         }
         LoginInfo _oLoginInfo = new LoginInfo();
 
-        public async Task<string> ConfirmMail(string username)
+        public async Task<string> ConfirmMail(string guid)
         {
             try
             {
-                if (string.IsNullOrEmpty(username)) return "Invalid Username";
+                if (string.IsNullOrEmpty(guid)) return "Invalid Username";
 
                 LoginInfo oLoginInfo = new LoginInfo()
                 {
-                    Username = username
+                    GUID = guid, 
                 };
-                LoginInfo loginInfo = await this.CheckRecordExistence(oLoginInfo);
+                LoginInfo loginInfo = await this.CheckGUIDExistence(oLoginInfo);
 
                 if (loginInfo == null)
                 {
@@ -41,11 +42,11 @@ namespace SignupWithMailConfirmation.Services
                 }
                 else
                 {
-                    var oLoginInfos = await _context.LoginInfos.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
+                    // var oLoginInfos = await _context.LoginInfos.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
 
-                    oLoginInfos.IsmailConfirmed = true;
+                    loginInfo.IsmailConfirmed = true;
                     
-                    _context.LoginInfos.Update(oLoginInfos);
+                    _context.LoginInfos.Update(loginInfo);
                     await _context.SaveChangesAsync();
 
                     
@@ -110,6 +111,7 @@ namespace SignupWithMailConfirmation.Services
                 Console.WriteLine("found:" + loginInfo);
                 if (loginInfo == null)
                 {
+                    oLoginInfo.GUID = GUIDToken.Generate();
                     await _context.LoginInfos.AddAsync(oLoginInfo);
                     await _context.SaveChangesAsync();
                 
@@ -186,6 +188,43 @@ namespace SignupWithMailConfirmation.Services
                     }
                 }
             }
+            if (!string.IsNullOrEmpty(oLoginInfo.GUID))
+            {
+                loginInfo = await this.GetLoginUserByID(oLoginInfo.GUID);
+                if (loginInfo != null)
+                {
+                    if (!loginInfo.IsmailConfirmed)
+                    {
+                        loginInfo.Message = Message.VerifyEmail;
+                    }
+                    else if (loginInfo.IsmailConfirmed)
+                    {
+                        loginInfo.Message = Message.UserAlreadyCreated;
+                    }
+                }
+            }
+
+            return loginInfo;
+        }
+
+        private async Task<LoginInfo> CheckGUIDExistence(LoginInfo oLoginInfo)
+        {
+            LoginInfo loginInfo = new LoginInfo();
+            if (!string.IsNullOrEmpty(oLoginInfo.GUID))
+            {
+                loginInfo = await this.GetLoginUserByID(oLoginInfo.GUID);
+                if (loginInfo != null)
+                {
+                    if (!loginInfo.IsmailConfirmed)
+                    {
+                        loginInfo.Message = Message.VerifyEmail;
+                    }
+                    else if (loginInfo.IsmailConfirmed)
+                    {
+                        loginInfo.Message = Message.UserAlreadyCreated;
+                    }
+                }
+            }
 
             return loginInfo;
         }
@@ -210,6 +249,13 @@ namespace SignupWithMailConfirmation.Services
         {
             _oLoginInfo = new LoginInfo();
             _oLoginInfo = await _context.LoginInfos.FirstOrDefaultAsync(u => u.Username == username);
+            return _oLoginInfo;
+        }
+
+        public async Task<LoginInfo> GetLoginUserByID(string guid)
+        {
+            _oLoginInfo = new LoginInfo();
+            _oLoginInfo = await _context.LoginInfos.FirstOrDefaultAsync(u => u.GUID == guid);
             return _oLoginInfo;
         }
 
