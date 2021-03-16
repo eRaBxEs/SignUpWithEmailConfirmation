@@ -19,7 +19,8 @@ namespace SignupWithMailConfirmation.Migrations
                     EmailId = table.Column<string>(nullable: false),
                     Username = table.Column<string>(maxLength: 16, nullable: false),
                     Password = table.Column<string>(maxLength: 255, nullable: false),
-                    IsmailConfirmed = table.Column<bool>(nullable: false)
+                    IsmailConfirmed = table.Column<bool>(nullable: false),
+                    GUID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

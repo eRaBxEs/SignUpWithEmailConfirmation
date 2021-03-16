@@ -33,6 +33,9 @@ namespace SignupWithMailConfirmation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsmailConfirmed")
                         .HasColumnType("bit");
 

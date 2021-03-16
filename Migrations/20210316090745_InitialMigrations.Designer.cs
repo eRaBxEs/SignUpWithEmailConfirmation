@@ -10,7 +10,7 @@ using SignupWithMailConfirmation.Data;
 namespace SignupWithMailConfirmation.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210314205612_InitialMigrations")]
+    [Migration("20210316090745_InitialMigrations")]
     partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace SignupWithMailConfirmation.Migrations
 
                     b.Property<string>("EmailId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GUID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsmailConfirmed")
