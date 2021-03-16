@@ -11,11 +11,11 @@ namespace SignupWithMailConfirmation.Services
     {
         public string GetMailBody(LoginInfo oLoginInfo)
         {
-            string url = Global.DomainName + "api/LoginInfo/ConfirmMail?username"+ oLoginInfo.Username;
+            string url = Global.DomainName + "api/LoginInfos/ConfirmMail/"+ oLoginInfo.GUID;
             return string.Format(@"<div style='text-align:centre;'>
                                         <h1>Welcome to AiroBusiness<h1>
                                         <h3>Click the button below to verify your Email<h3>
-                                        <form method='post' action='{0}' style='display : inline;'>
+                                        <form method='get' action='{0}' style='display : inline;'>
                                             <button type='submit' style='display : block;
                                                                         text-align : centre;
                                                                         font-weight : bold;
