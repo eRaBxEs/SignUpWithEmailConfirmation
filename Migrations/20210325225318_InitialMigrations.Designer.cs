@@ -10,7 +10,7 @@ using SignupWithMailConfirmation.Data;
 namespace SignupWithMailConfirmation.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210316090745_InitialMigrations")]
+    [Migration("20210325225318_InitialMigrations")]
     partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
